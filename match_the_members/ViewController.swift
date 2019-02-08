@@ -25,6 +25,19 @@ class ViewController: UIViewController {
         mdbImage = UIImageView(frame: CGRect(x: 0, y: view.frame.height - height, width: width, height: height))
         mdbImage.image = mdb
         view.addSubview(mdbImage)
+        
+        startButton = UIButton(frame: CGRect(x: view.frame.width / 2 - 60, y: mdbImage.frame.minY/2, width: 120, height: 50))
+        startButton.setTitle("Start", for: .normal)
+        startButton.setTitleColor(.black, for: .normal)
+        startButton.layer.borderWidth = 1.0
+        startButton.layer.borderColor = UIColor.black.cgColor
+        startButton.layer.cornerRadius = 5.0
+        startButton.addTarget(self, action: #selector(startClicked), for: .touchUpInside)
+        view.addSubview(startButton)
+    }
+    
+    @objc func startClicked() {
+        performSegue(withIdentifier: "start", sender: self)
     }
 
 }

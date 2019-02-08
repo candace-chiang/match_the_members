@@ -13,6 +13,7 @@
 		420A0F9E220CFB1B00096561 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 420A0F9D220CFB1B00096561 /* Assets.xcassets */; };
 		420A0FA1220CFB1B00096561 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 420A0F9F220CFB1B00096561 /* LaunchScreen.storyboard */; };
 		4268F623220D0099009F918C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268F622220D0099009F918C /* Constants.swift */; };
+		4268F625220D607D009F918C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268F624220D607D009F918C /* MainViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		420A0FA0220CFB1B00096561 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		420A0FA2220CFB1B00096561 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4268F622220D0099009F918C /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4268F624220D607D009F918C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				420A0F96220CFB1B00096561 /* AppDelegate.swift */,
 				420A0F98220CFB1B00096561 /* ViewController.swift */,
+				4268F624220D607D009F918C /* MainViewController.swift */,
 				420A0F9A220CFB1B00096561 /* Main.storyboard */,
 				4268F622220D0099009F918C /* Constants.swift */,
 				420A0F9D220CFB1B00096561 /* Assets.xcassets */,
@@ -142,6 +145,7 @@
 				420A0F99220CFB1B00096561 /* ViewController.swift in Sources */,
 				420A0F97220CFB1B00096561 /* AppDelegate.swift in Sources */,
 				4268F623220D0099009F918C /* Constants.swift in Sources */,
+				4268F625220D607D009F918C /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
