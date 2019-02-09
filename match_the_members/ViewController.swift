@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //mdb image!!
         //did it wrong cuz i didn't see project but i don't want to change it!
         let mdb = UIImage(named: "mdb")
         let scale = Float(0.24)
@@ -26,6 +27,7 @@ class ViewController: UIViewController {
         mdbImage.image = mdb
         view.addSubview(mdbImage)
         
+        //start my game
         startButton = UIButton(frame: CGRect(x: view.frame.width / 2 - 60, y: mdbImage.frame.minY/2, width: 120, height: 50))
         startButton.setTitle("Start!!", for: .normal)
         startButton.setTitleColor(.black, for: .normal)

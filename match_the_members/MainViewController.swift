@@ -15,6 +15,7 @@ class MainViewController: UIViewController {
     let length = Constants.names.count
     var timer: Timer!
     var seconds = 5
+    var isClicked = false
     
     var imageView: UIImageView!
     var funView: UIImageView!
@@ -38,14 +39,18 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //logic
         names = get_names()
         chosen = Int(arc4random_uniform(UInt32(4)))
+        
+        //member image woohoo
         imageView  =  UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width - 20, height: view.frame.height / 2))
         imageView.center = CGPoint(x: view.frame.width / 2, y: view.frame.height / 4 + 50)
         imageView.image = Constants.getImageFor(name: Constants.names[names[chosen]])
         imageView.contentMode = .scaleAspectFit
         view.addSubview(imageView)
         
+        //the mad and happy faces show up >)
         funView = UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height/3))
         funView.center = CGPoint(x: view.frame.width/2, y: view.frame.height/4 + 50)
         funView.image = nil
@@ -53,12 +58,14 @@ class MainViewController: UIViewController {
         funView.contentMode = .scaleAspectFit
         view.addSubview(funView)
         
+        //it's a timer?! i tried to make it responsive, but was to fixed frame of image :(
         timerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 40))
         timerLabel.center = CGPoint(x: view.frame.width/2, y: (imageView.frame.minY + 15)/2)
         timerLabel.textAlignment = .center
         timerLabel.text = "Loser! You have \(seconds) seconds remaining!!"
-        run_timer()
         view.addSubview(timerLabel)
+        
+        //all the trivia buttons
         
         let button_width = view.frame.width/2 - 35
         let button_height = view.frame.height / 4 - 80
@@ -87,11 +94,12 @@ class MainViewController: UIViewController {
         button_4.tag = 3
         view.addSubview(button_4)
         
-        scoreLabel = UILabel(frame: CGRect(x: view.frame.width/13, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
+        scoreLabel = UILabel(frame: CGRect(x: view.frame.width/16, y: button_4.frame.maxY + 13, width: view.frame.width/4, height: view.frame.height/12))
         scoreLabel.text = "Score: \(score)"
         scoreLabel.textAlignment = .center
         view.addSubview(scoreLabel)
         
+        //go to the stats page!
         statsButton = UIButton(frame: CGRect(x: view.frame.width * 2/3, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
         statsButton.setTitle("Stats!", for: .normal)
         general_button(statsButton)
@@ -99,6 +107,7 @@ class MainViewController: UIViewController {
         statsButton.addTarget(self, action: #selector(stats_clicked), for: .touchUpInside)
         view.addSubview(statsButton)
         
+        //pause my game D:
         pauseButton = UIButton(frame: CGRect(x: view.frame.width * 0.35, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
         pauseButton.setTitle("Pause :0", for: .normal)
         general_button(pauseButton)
@@ -115,16 +124,19 @@ class MainViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    //had a bug where timer would stop if you went to another screen, so i fixed it here!
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         run_timer()
     }
     
+    //makes trivia buttons
     func make_button(_ button: UIButton) {
         general_button(button)
         button.addTarget(self, action: #selector(clicked), for: .touchUpInside)
     }
     
+    //makes all buttons?!
     func general_button(_ button: UIButton) {
         let margin: CGFloat = 2.0
         button.setTitleColor(.black, for: .normal)
@@ -137,10 +149,12 @@ class MainViewController: UIViewController {
         button.layer.cornerRadius = 5.0
     }
     
+    //instantiates 1 second timers
     func run_timer() {
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update_timer), userInfo: nil, repeats: false)
     }
     
+    //updates the timer label plus makes the mad face when you run out of time
     @objc func update_timer() {
         seconds -= 1
         if seconds == 0 {
@@ -154,6 +168,7 @@ class MainViewController: UIViewController {
         }
     }
     
+    //easy method to make the selected button go back to normal
     func reset(_ button: UIButton) {
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white
@@ -161,40 +176,59 @@ class MainViewController: UIViewController {
         button.layer.borderColor = UIColor.black.cgColor
     }
     
+    //randomly generates an array of indices in the names array
+    func get_names() -> [Int] {
+        var names: [Int] = []
+        var poss: Int
+        while names.count < 4 {
+            poss = Int(arc4random_uniform(UInt32(length)))
+            if !(names.contains(poss)) {
+                names.append(poss)
+            }
+        }
+        return names
+    }
+
+    //clicked on a trivia button; also prevent timer from going wack when double click on button
     @objc func clicked(sender: UIButton) {
-        timer.invalidate()
-        var new = ""
-        if sender.tag == chosen {
-            sender.backgroundColor = UIColor(hexString: "#A9F5A9")
-            sender.layer.borderColor = UIColor(hexString: "#04B404").cgColor
-            score += 1
-            curr_streak += 1
-            streak = max(streak, curr_streak)
-            new = "Woohoo"
-            scoreLabel.text = "Score: \(score)"
-            timerLabel.text = "Wow teach me how to network!"
-            funView.image = UIImage(named: "happy")
-        } else {
-            sender.backgroundColor = UIColor(hexString: "#F6CECE")
-            sender.layer.borderColor = UIColor(hexString: "#FF0000").cgColor
-            curr_streak = 0
-            new = "Uh oh"
-            timerLabel.text = "RIP WHO U? BOARD REVIEW! (:"
-            funView.image = UIImage(named: "mad")
+        if !isClicked {
+            timer.invalidate()
+            var new = ""
+            if sender.tag == chosen {
+                sender.backgroundColor = UIColor(hexString: "#A9F5A9")
+                sender.layer.borderColor = UIColor(hexString: "#04B404").cgColor
+                score += 1
+                curr_streak += 1
+                streak = max(streak, curr_streak)
+                new = "correct"
+                scoreLabel.text = "Score: \(score)"
+                timerLabel.text = "Wow teach me how to network!"
+                funView.image = UIImage(named: "happy")
+            } else {
+                sender.backgroundColor = UIColor(hexString: "#F6CECE")
+                sender.layer.borderColor = UIColor(hexString: "#FF0000").cgColor
+                curr_streak = 0
+                new = "wrong"
+                timerLabel.text = "RIP WHO U? BOARD REVIEW! (:"
+                funView.image = UIImage(named: "mad")
+            }
+            sender.layer.borderWidth = 2.0
+            if last.count < 3 {
+                last.append(new)
+            } else {
+                last.remove(at: 0)
+                last.append(new)
+            }
+            isClicked = true
+            Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(reselect), userInfo: nil, repeats: false)
         }
-        sender.layer.borderWidth = 2.0
-        if last.count < 3 {
-            last.append(new)
-        } else {
-            last.remove(at: 0)
-            last.append(new)
-        }
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(reselect), userInfo: nil, repeats: false)
     }
     
+    //picks new names plus images and makes everything back to normal
     @objc func reselect() {
         seconds = 5
         names = get_names()
+        isClicked = false
         chosen = Int(arc4random_uniform(UInt32(4)))
         timerLabel.text = "Loser! You have \(seconds) seconds remaining!!"
         imageView.image = Constants.getImageFor(name: Constants.names[names[chosen]])
@@ -210,18 +244,6 @@ class MainViewController: UIViewController {
         run_timer()
     }
     
-    func get_names() -> [Int] {
-        var names: [Int] = []
-        var poss: Int
-        while names.count < 4 {
-            poss = Int(arc4random_uniform(UInt32(length)))
-            if !(names.contains(poss)) {
-                names.append(poss)
-            }
-        }
-        return names
-    }
-    
     @objc func stats_clicked() {
         timer.invalidate()
         performSegue(withIdentifier: "toStats", sender: self)
@@ -232,6 +254,7 @@ class MainViewController: UIViewController {
         performSegue(withIdentifier: "pause", sender: self)
     }
     
+    //want to send data to stats, but not to pause screen
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let identifier = segue.identifier {
             switch identifier {
