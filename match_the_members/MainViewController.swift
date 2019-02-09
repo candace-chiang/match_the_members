@@ -13,29 +13,30 @@ class MainViewController: UIViewController {
     let length = Constants.names.count
     var timer: Timer!
     var seconds = 5
+    
     var imageView: UIImageView!
     var funView: UIImageView!
     var button_1: UIButton!
     var button_2: UIButton!
     var button_3: UIButton!
     var button_4: UIButton!
+    var statsButton: UIButton!
+    var pauseButton: UIButton!
     var scoreLabel: UILabel!
     var timerLabel: UILabel!
+    
     var names: [Int] = []
     var chosen: Int = -1
+    
     var score: Int = 0
+    var streak: Int = 0
+    var curr_streak: Int = 0
+    var last: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        timerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 40))
-        timerLabel.center = CGPoint(x: view.frame.width/2, y: 35)
-        timerLabel.textAlignment = .center
-        timerLabel.text = "Loser! You have \(seconds) seconds remaining!!"
-        run_timer()
-        view.addSubview(timerLabel)
-        
-        names = getNames()
+        names = get_names()
         chosen = Int(arc4random_uniform(UInt32(4)))
         imageView  =  UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width - 20, height: view.frame.height / 2))
         imageView.center = CGPoint(x: view.frame.width / 2, y: view.frame.height / 4 + 50)
@@ -49,6 +50,13 @@ class MainViewController: UIViewController {
         funView.backgroundColor = UIColor(white: 1, alpha: 0.0)
         funView.contentMode = .scaleAspectFit
         view.addSubview(funView)
+        
+        timerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 40))
+        timerLabel.center = CGPoint(x: view.frame.width/2, y: (imageView.frame.minY + 15)/2)
+        timerLabel.textAlignment = .center
+        timerLabel.text = "Loser! You have \(seconds) seconds remaining!!"
+        run_timer()
+        view.addSubview(timerLabel)
         
         let button_width = view.frame.width/2 - 35
         let button_height = view.frame.height / 4 - 80
@@ -77,15 +85,34 @@ class MainViewController: UIViewController {
         button_4.tag = 3
         view.addSubview(button_4)
         
-        scoreLabel = UILabel(frame: CGRect(x: view.frame.width/8, y: button_4.frame.maxY + 20, width: view.frame.width/4, height: view.frame.height - (button_4.frame.maxY + 40)))
+        scoreLabel = UILabel(frame: CGRect(x: view.frame.width/10, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
         scoreLabel.text = "Score: \(score)"
         scoreLabel.textAlignment = .center
         view.addSubview(scoreLabel)
+        
+        statsButton = UIButton(frame: CGRect(x: view.frame.width * 2/3, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
+        statsButton.setTitle("Stats!", for: .normal)
+        general_button(statsButton)
+        statsButton.layer.cornerRadius = 10.0
+        statsButton.addTarget(self, action: #selector(stats_clicked), for: .touchUpInside)
+        view.addSubview(statsButton)
+        
+        pauseButton = UIButton(frame: CGRect(x: view.frame.width * 2/5, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
+        pauseButton.setTitle("Stats!", for: .normal)
+        general_button(pauseButton)
+        pauseButton.layer.cornerRadius = 10.0
+        pauseButton.addTarget(self, action: #selector(pause_clicked), for: .touchUpInside)
+        view.addSubview(pauseButton)
         
         // Do any additional setup after loading the view.
     }
     
     func make_button(_ button: UIButton) {
+        general_button(button)
+        button.addTarget(self, action: #selector(clicked), for: .touchUpInside)
+    }
+    
+    func general_button(_ button: UIButton) {
         let margin: CGFloat = 2.0
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -94,7 +121,6 @@ class MainViewController: UIViewController {
         button.layer.borderWidth = 1.0
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.cornerRadius = 5.0
-        button.addTarget(self, action: #selector(clicked), for: .touchUpInside)
     }
     
     func run_timer() {
@@ -123,26 +149,38 @@ class MainViewController: UIViewController {
     
     @objc func clicked(sender: UIButton) {
         timer.invalidate()
+        var new = ""
         if sender.tag == chosen {
             sender.backgroundColor = UIColor(hexString: "#A9F5A9")
             sender.layer.borderColor = UIColor(hexString: "#04B404").cgColor
             score += 1
+            curr_streak += 1
+            streak = max(streak, curr_streak)
+            new = "Woohoo"
             scoreLabel.text = "Score: \(score)"
             timerLabel.text = "Wow teach me how to network!"
             funView.image = UIImage(named: "happy")
         } else {
             sender.backgroundColor = UIColor(hexString: "#F6CECE")
             sender.layer.borderColor = UIColor(hexString: "#FF0000").cgColor
+            curr_streak = 0
+            new = "Uh oh"
             timerLabel.text = "RIP WHO U? BOARD REVIEW! (:"
             funView.image = UIImage(named: "mad")
         }
         sender.layer.borderWidth = 2.0
+        if last.count < 3 {
+            last.append(new)
+        } else {
+            last.remove(at: 0)
+            last.append(new)
+        }
         Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(reselect), userInfo: nil, repeats: false)
     }
     
     @objc func reselect() {
         seconds = 5
-        names = getNames()
+        names = get_names()
         chosen = Int(arc4random_uniform(UInt32(4)))
         timerLabel.text = "Loser! You have \(seconds) seconds remaining!!"
         imageView.image = Constants.getImageFor(name: Constants.names[names[chosen]])
@@ -158,7 +196,7 @@ class MainViewController: UIViewController {
         run_timer()
     }
     
-    func getNames() -> [Int] {
+    func get_names() -> [Int] {
         var names: [Int] = []
         var poss: Int
         while names.count < 4 {
@@ -168,6 +206,30 @@ class MainViewController: UIViewController {
             }
         }
         return names
+    }
+    
+    @objc func stats_clicked() {
+        timer.invalidate()
+        performSegue(withIdentifier: "toStats", sender: self)
+    }
+    
+    @objc func pause_clicked() {
+        timer.invalidate()
+        performSegue(withIdentifier: "pause", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+                case "toStats":
+                    let statsVC = segue.destination as! StatsViewController
+                    statsVC.streak = streak
+                    statsVC.last = last
+                    break
+                case "pause":
+                    break
+                }
+        }
     }
     
 }
