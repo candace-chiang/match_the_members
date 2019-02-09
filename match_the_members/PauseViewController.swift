@@ -16,21 +16,23 @@ class PauseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        imageView  =  UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width/2, height: view.frame.height/2))
-        imageView.center = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
+        imageView  =  UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width * 2/3, height: view.frame.height * 2/3))
+        imageView.center = CGPoint(x: view.frame.width / 2, y: view.frame.height * 1/3)
         imageView.image = UIImage(named: "troll")
         imageView.contentMode = .scaleAspectFit
         view.addSubview(imageView)
         
-        playButton = UIButton(frame: CGRect(x: view.frame.width/2, y: view.frame.height * 2/3, width: view.frame.width/4, height: view.frame.height/15))
+        playButton = UIButton(frame: CGRect(x: 0, y: 0, width: view.frame.width/4, height: view.frame.height/15))
+        playButton.center = CGPoint(x: view.frame.width/2, y: view.frame.height * 3/4)
         playButton.setTitle("Play :0", for: .normal)
         let margin: CGFloat = 2.0
         playButton.setTitleColor(.black, for: .normal)
         playButton.titleLabel?.adjustsFontSizeToFitWidth = true
         playButton.widthAnchor.constraint(equalToConstant: playButton.titleLabel!.intrinsicContentSize.width + margin * 2.0).isActive = true
         playButton.heightAnchor.constraint(equalToConstant: playButton.titleLabel!.intrinsicContentSize.height + margin * 2.0).isActive = true
-        playButton.layer.borderWidth = 1.0
-        playButton.layer.borderColor = UIColor.black.cgColor
+        playButton.layer.borderWidth = 2.0
+        playButton.backgroundColor = UIColor(hexString: "#A9F5A9")
+        playButton.layer.borderColor = UIColor(hexString: "#04B404").cgColor
         playButton.layer.cornerRadius = 5.0
         playButton.layer.cornerRadius = 10.0
         playButton.addTarget(self, action: #selector(back_clicked), for: .touchUpInside)

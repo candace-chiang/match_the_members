@@ -10,6 +10,8 @@ import UIKit
 
 class MainViewController: UIViewController {
 
+    let state = UIApplication.shared.applicationState
+    
     let length = Constants.names.count
     var timer: Timer!
     var seconds = 5
@@ -85,7 +87,7 @@ class MainViewController: UIViewController {
         button_4.tag = 3
         view.addSubview(button_4)
         
-        scoreLabel = UILabel(frame: CGRect(x: view.frame.width/10, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
+        scoreLabel = UILabel(frame: CGRect(x: view.frame.width/13, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
         scoreLabel.text = "Score: \(score)"
         scoreLabel.textAlignment = .center
         view.addSubview(scoreLabel)
@@ -97,14 +99,25 @@ class MainViewController: UIViewController {
         statsButton.addTarget(self, action: #selector(stats_clicked), for: .touchUpInside)
         view.addSubview(statsButton)
         
-        pauseButton = UIButton(frame: CGRect(x: view.frame.width * 2/5, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
-        pauseButton.setTitle("Stats!", for: .normal)
+        pauseButton = UIButton(frame: CGRect(x: view.frame.width * 0.35, y: button_4.frame.maxY + 15, width: view.frame.width/4, height: view.frame.height/15))
+        pauseButton.setTitle("Pause :0", for: .normal)
         general_button(pauseButton)
+        pauseButton.backgroundColor = UIColor(hexString: "#F8E0E0")
+        pauseButton.layer.borderColor = UIColor(hexString: "#FF0000").cgColor
         pauseButton.layer.cornerRadius = 10.0
         pauseButton.addTarget(self, action: #selector(pause_clicked), for: .touchUpInside)
         view.addSubview(pauseButton)
         
+        if state == .background {
+            pause_clicked()
+        }
+        
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        run_timer()
     }
     
     func make_button(_ button: UIButton) {
@@ -115,10 +128,11 @@ class MainViewController: UIViewController {
     func general_button(_ button: UIButton) {
         let margin: CGFloat = 2.0
         button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor(hexString: "#FAFAFA")
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.widthAnchor.constraint(equalToConstant: button.titleLabel!.intrinsicContentSize.width + margin * 2.0).isActive = true
         button.heightAnchor.constraint(equalToConstant: button.titleLabel!.intrinsicContentSize.height + margin * 2.0).isActive = true
-        button.layer.borderWidth = 1.0
+        button.layer.borderWidth = 1.5
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.cornerRadius = 5.0
     }
@@ -127,7 +141,7 @@ class MainViewController: UIViewController {
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update_timer), userInfo: nil, repeats: false)
     }
     
-    @ objc func update_timer() {
+    @objc func update_timer() {
         seconds -= 1
         if seconds == 0 {
             timer.invalidate()
@@ -226,9 +240,8 @@ class MainViewController: UIViewController {
                     statsVC.streak = streak
                     statsVC.last = last
                     break
-                case "pause":
-                    break
-                }
+                default: break
+            }
         }
     }
     

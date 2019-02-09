@@ -32,7 +32,7 @@ class StatsViewController: UIViewController {
         
         streakLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width * 3/4, height: view.frame.height * 1/3))
         streakLabel.center = CGPoint(x: view.frame.width/2, y: view.frame.height * 1/5)
-        streakLabel.text = "Your current streak is \(streak!).\n\n...doesn't look too good...maybe you should play some more!"
+        streakLabel.text = "Your current streak is \(streak!)!\n\n...doesn't look too good...maybe you should play some more!"
         streakLabel.textAlignment = .center
         streakLabel.lineBreakMode = .byWordWrapping
         streakLabel.numberOfLines = 0
@@ -40,7 +40,7 @@ class StatsViewController: UIViewController {
         
         lastLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width * 3/4, height: view.frame.height * 1/3))
         lastLabel.center = CGPoint(x: view.frame.width/2, y: view.frame.height * 3/8)
-        lastLabel.text = "Your current results (last to most recent) are:\n" + last.joined(separator: ", ")
+        lastLabel.text = "Your current results (chronological) are:\n" + last.joined(separator: ", ")
         lastLabel.textAlignment = .center
         lastLabel.lineBreakMode = .byWordWrapping
         lastLabel.numberOfLines = 0
@@ -53,7 +53,7 @@ class StatsViewController: UIViewController {
         backButton.titleLabel?.adjustsFontSizeToFitWidth = true
         backButton.widthAnchor.constraint(equalToConstant: backButton.titleLabel!.intrinsicContentSize.width + margin * 2.0).isActive = true
         backButton.heightAnchor.constraint(equalToConstant: backButton.titleLabel!.intrinsicContentSize.height + margin * 2.0).isActive = true
-        backButton.layer.borderWidth = 1.0
+        backButton.layer.borderWidth = 2.2
         backButton.layer.borderColor = UIColor.black.cgColor
         backButton.layer.cornerRadius = 15.0
         backButton.addTarget(self, action: #selector(back_clicked), for: .touchUpInside)
