@@ -40,7 +40,7 @@ class StatsViewController: UIViewController {
         
         lastLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width * 3/4, height: view.frame.height * 1/3))
         lastLabel.center = CGPoint(x: view.frame.width/2, y: view.frame.height * 3/8)
-        lastLabel.text = "Your current results (chronological) are:\n" + last.joined(separator: ", ")
+        lastLabel.text = "Your current results are:\n" + last.joined(separator: ", ")
         lastLabel.textAlignment = .center
         lastLabel.lineBreakMode = .byWordWrapping
         lastLabel.numberOfLines = 0

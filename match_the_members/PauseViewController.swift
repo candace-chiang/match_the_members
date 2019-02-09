@@ -17,7 +17,7 @@ class PauseViewController: UIViewController {
         super.viewDidLoad()
         
         imageView  =  UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width * 2/3, height: view.frame.height * 2/3))
-        imageView.center = CGPoint(x: view.frame.width / 2, y: view.frame.height * 1/3)
+        imageView.center = CGPoint(x: view.frame.width / 2, y: view.frame.height * 2/5)
         imageView.image = UIImage(named: "troll")
         imageView.contentMode = .scaleAspectFit
         view.addSubview(imageView)
