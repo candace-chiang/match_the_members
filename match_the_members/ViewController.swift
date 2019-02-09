@@ -27,10 +27,9 @@ class ViewController: UIViewController {
         view.addSubview(mdbImage)
         
         startButton = UIButton(frame: CGRect(x: view.frame.width / 2 - 60, y: mdbImage.frame.minY/2, width: 120, height: 50))
-        startButton.setTitle("Start", for: .normal)
+        startButton.setTitle("Start!!", for: .normal)
         startButton.setTitleColor(.black, for: .normal)
         startButton.layer.borderWidth = 1.0
-        startButton.layer.borderColor = UIColor.black.cgColor
         startButton.layer.cornerRadius = 5.0
         startButton.addTarget(self, action: #selector(startClicked), for: .touchUpInside)
         view.addSubview(startButton)
